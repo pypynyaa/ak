@@ -6,32 +6,41 @@
   <title>АК: тренажёр билетов</title>
   <style>
     :root {
-      --bg: #f6f3ee;
-      --ink: #1e2428;
-      --muted: #667078;
-      --line: #d8d0c4;
-      --front: #ffffff;
-      --back: #eef6f2;
-      --accent: #1e6f68;
-      --bad: #a33d35;
-      --good: #2d6b3f;
+      --bg: #07090d;
+      --panel: #10151d;
+      --panel-2: #151c26;
+      --ink: #edf3f7;
+      --muted: #94a3b3;
+      --line: #263241;
+      --front: #111823;
+      --back: #102119;
+      --accent: #4cc9b0;
+      --accent-ink: #06120f;
+      --bad: #ff6b65;
+      --good: #78d47e;
+      --shadow: rgba(0, 0, 0, 0.34);
     }
 
     * { box-sizing: border-box; }
 
+    html, body { min-height: 100%; }
+
     body {
       margin: 0;
       min-height: 100vh;
+      min-height: 100dvh;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--ink);
-      background: var(--bg);
-      display: grid;
-      grid-template-rows: auto 1fr;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(76, 201, 176, 0.16), transparent 28rem),
+        linear-gradient(180deg, #0a0d12 0%, var(--bg) 58%);
+      display: flex;
+      flex-direction: column;
     }
 
     header {
       border-bottom: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.72);
+      background: rgba(10, 13, 18, 0.86);
       backdrop-filter: blur(14px);
       padding: 14px 18px;
       display: flex;
@@ -44,7 +53,8 @@
     h1 {
       font-size: 18px;
       margin: 0;
-      font-weight: 700;
+      font-weight: 760;
+      letter-spacing: 0;
     }
 
     .controls {
@@ -54,29 +64,32 @@
       flex-wrap: wrap;
     }
 
-    button, label.file {
+    button {
       border: 1px solid var(--line);
-      background: #fff;
+      background: var(--panel-2);
       color: var(--ink);
       border-radius: 8px;
-      padding: 9px 12px;
+      padding: 10px 13px;
       font: inherit;
+      font-weight: 650;
       cursor: pointer;
+      min-height: 42px;
     }
 
-    button.primary { background: var(--accent); color: white; border-color: var(--accent); }
-    button.good { background: var(--good); color: white; border-color: var(--good); }
-    button.bad { background: var(--bad); color: white; border-color: var(--bad); }
+    button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+    button.good { background: rgba(120, 212, 126, 0.18); color: #bdf2c0; border-color: rgba(120, 212, 126, 0.48); }
+    button.bad { background: rgba(255, 107, 101, 0.16); color: #ffc0bd; border-color: rgba(255, 107, 101, 0.46); }
     button:disabled { opacity: 0.45; cursor: not-allowed; }
-    input[type="file"] { display: none; }
 
     main {
       width: min(980px, 100%);
       margin: 0 auto;
-      padding: 24px 18px 34px;
-      display: grid;
-      gap: 14px;
-      align-content: start;
+      padding: 18px;
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .stats {
@@ -88,13 +101,14 @@
     .stat {
       border: 1px solid var(--line);
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.68);
+      background: rgba(16, 21, 29, 0.82);
       padding: 10px 12px;
     }
 
     .stat b {
       display: block;
       font-size: 20px;
+      line-height: 1.1;
     }
 
     .stat span {
@@ -102,14 +116,26 @@
       font-size: 13px;
     }
 
+    #trainer {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    #trainer[hidden] { display: none; }
+
     .card-wrap {
       perspective: 1600px;
-      min-height: 430px;
+      flex: 1;
+      min-height: 420px;
     }
 
     .card {
       position: relative;
-      min-height: 430px;
+      min-height: 100%;
+      height: 100%;
       transform-style: preserve-3d;
       transition: transform 220ms ease;
     }
@@ -120,30 +146,32 @@
       position: absolute;
       inset: 0;
       border: 1px solid var(--line);
-      border-radius: 12px;
+      border-radius: 14px;
       padding: clamp(20px, 4vw, 38px);
       backface-visibility: hidden;
       display: grid;
       align-content: center;
       gap: 18px;
-      box-shadow: 0 18px 48px rgba(44, 35, 24, 0.10);
+      box-shadow: 0 24px 70px var(--shadow);
+      overflow-y: auto;
     }
 
-    .front { background: var(--front); }
-    .back { background: var(--back); transform: rotateY(180deg); }
+    .front { background: linear-gradient(180deg, #151d29 0%, var(--front) 100%); }
+    .back { background: linear-gradient(180deg, #13251c 0%, var(--back) 100%); transform: rotateY(180deg); }
 
     .kicker {
-      color: var(--muted);
+      color: var(--accent);
       font-size: 14px;
-      font-weight: 650;
+      font-weight: 760;
       letter-spacing: 0;
     }
 
     .question {
       font-size: clamp(24px, 4vw, 38px);
       line-height: 1.16;
-      font-weight: 760;
+      font-weight: 780;
       letter-spacing: 0;
+      overflow-wrap: anywhere;
     }
 
     .answer {
@@ -151,6 +179,7 @@
       line-height: 1.48;
       max-width: 78ch;
       white-space: pre-wrap;
+      overflow-wrap: anywhere;
     }
 
     .hint {
@@ -159,95 +188,111 @@
     }
 
     .actions {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
     }
 
     .empty {
       border: 1px dashed var(--line);
       border-radius: 12px;
       padding: 28px;
-      background: rgba(255,255,255,0.62);
+      background: rgba(16, 21, 29, 0.82);
       color: var(--muted);
       line-height: 1.5;
     }
 
     @media (max-width: 720px) {
-      body { grid-template-rows: auto 1fr; }
+      body { overflow: hidden; }
+
       header {
-        align-items: stretch;
-        position: sticky;
-        top: 0;
-        z-index: 4;
+        padding: 10px;
+        gap: 8px;
       }
-      .controls, header { flex-direction: column; }
-      button, label.file {
+
+      h1 { font-size: 16px; }
+
+      .controls {
         width: 100%;
-        text-align: center;
-        min-height: 44px;
-      }
-      main {
-        padding: 12px 10px 118px;
-        gap: 10px;
-      }
-      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .stat {
-        padding: 8px 10px;
-      }
-      .stat b {
-        font-size: 18px;
-      }
-      .card-wrap, .card {
-        min-height: min(560px, calc(100vh - 260px));
-      }
-      .side {
-        border-radius: 10px;
-        padding: 18px;
-        align-content: start;
-        overflow-y: auto;
-      }
-      .question {
-        font-size: 25px;
-        line-height: 1.2;
-        overflow-wrap: anywhere;
-      }
-      .answer {
-        font-size: 17px;
-        line-height: 1.42;
-        overflow-wrap: anywhere;
-      }
-      .actions {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 5;
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
-        padding: 10px;
-        border-top: 1px solid var(--line);
-        background: rgba(246, 243, 238, 0.94);
-        backdrop-filter: blur(14px);
       }
-      .actions button {
+
+      button {
         width: 100%;
+        min-height: 44px;
         padding: 10px 8px;
       }
+
+      main {
+        padding: 10px;
+        gap: 8px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .stat {
+        padding: 8px 7px;
+        min-width: 0;
+      }
+
+      .stat b {
+        font-size: 16px;
+        white-space: nowrap;
+      }
+
+      .stat span {
+        display: block;
+        font-size: 11px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      #trainer { gap: 8px; }
+
+      .card-wrap {
+        min-height: 0;
+      }
+
+      .side {
+        border-radius: 12px;
+        padding: 16px;
+        align-content: start;
+        gap: 12px;
+      }
+
+      .question {
+        font-size: clamp(20px, 6.4vw, 26px);
+        line-height: 1.18;
+      }
+
+      .answer {
+        font-size: clamp(15px, 4.25vw, 17px);
+        line-height: 1.42;
+      }
+
+      .kicker, .hint { font-size: 13px; }
+
+      .actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        flex: 0 0 auto;
+      }
+
+      #flipBtn { grid-column: 1 / -1; }
     }
 
-    @media (max-width: 390px) {
-      .question { font-size: 22px; }
-      .answer { font-size: 16px; }
-      .kicker, .hint { font-size: 13px; }
-      .actions {
-        grid-template-columns: 1fr;
-        max-height: 48vh;
-        overflow-y: auto;
-      }
-      main { padding-bottom: 276px; }
+    @media (max-width: 380px) {
+      header { padding: 8px; }
+      main { padding: 8px; }
+      .controls { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .side { padding: 14px; }
+      .question { font-size: 20px; }
+      .answer { font-size: 15px; }
     }
   </style>
 </head>
@@ -255,11 +300,6 @@
   <header>
     <h1>АК: тренажёр билетов</h1>
     <div class="controls">
-      <label class="file">
-        Загрузить CSV
-        <input id="fileInput" type="file" accept=".csv,text/csv">
-      </label>
-      <button id="loadFullBtn" class="primary">Полная колода</button>
       <button id="shuffleBtn">Перемешать</button>
       <button id="resetBtn">Сбросить прогресс</button>
     </div>
@@ -274,9 +314,8 @@
     </section>
 
     <section id="empty" class="empty">
-      Нажми "Полная колода", чтобы загрузить все 233 билета, или загрузи
-      свой CSV с колонками "Вопрос" и "Ответ". После загрузки нажимай
-      пробел, чтобы перевернуть карточку, стрелку вправо для следующей.
+      Колода загружается автоматически. Нажимай пробел, чтобы перевернуть карточку,
+      стрелки влево/вправо для навигации, X и Z для отметок.
     </section>
 
     <section id="trainer" hidden>
@@ -471,13 +510,6 @@
       render();
     }
 
-    $("fileInput").addEventListener("change", async (event) => {
-      const file = event.target.files[0];
-      if (!file) return;
-      loadCards(await file.text(), "custom");
-    });
-
-    $("loadFullBtn").addEventListener("click", loadFullDeck);
     $("flipBtn").addEventListener("click", flip);
     $("prevBtn").addEventListener("click", previous);
     $("nextBtn").addEventListener("click", next);
