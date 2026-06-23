@@ -85,10 +85,10 @@
       width: min(980px, 100%);
       margin: 0 auto;
       padding: 18px;
-      display: flex;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
       flex: 1;
       min-height: 0;
-      flex-direction: column;
       gap: 12px;
     }
 
@@ -117,10 +117,9 @@
     }
 
     #trainer {
-      display: flex;
-      flex: 1;
+      display: grid;
+      grid-template-rows: minmax(360px, 1fr) auto;
       min-height: 0;
-      flex-direction: column;
       gap: 12px;
     }
 
@@ -128,13 +127,13 @@
 
     .card-wrap {
       perspective: 1600px;
-      flex: 1;
-      min-height: 420px;
+      min-height: 0;
+      height: 100%;
     }
 
     .card {
       position: relative;
-      min-height: 100%;
+      min-height: 0;
       height: 100%;
       transform-style: preserve-3d;
       transition: transform 220ms ease;
@@ -154,6 +153,7 @@
       gap: 18px;
       box-shadow: 0 24px 70px var(--shadow);
       overflow-y: auto;
+      min-height: 0;
     }
 
     .front { background: linear-gradient(180deg, #151d29 0%, var(--front) 100%); }
@@ -172,6 +172,7 @@
       font-weight: 780;
       letter-spacing: 0;
       overflow-wrap: anywhere;
+      max-width: 100%;
     }
 
     .answer {
@@ -180,6 +181,7 @@
       max-width: 78ch;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
+      min-width: 0;
     }
 
     .hint {
@@ -252,10 +254,14 @@
         text-overflow: ellipsis;
       }
 
-      #trainer { gap: 8px; }
+      #trainer {
+        grid-template-rows: minmax(0, 1fr) auto;
+        gap: 8px;
+      }
 
       .card-wrap {
         min-height: 0;
+        height: 100%;
       }
 
       .side {
